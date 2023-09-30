@@ -59,7 +59,7 @@
             <div class="fileInfo flexRow">
               <div class="fileImg flexRowCenterAll">
                 <i class="el-icon-picture" v-if="file.file.raw.type.includes('image')"></i>
-                <i class="el-icon-video" v-if="file.file.raw.type.includes('video')"></i>
+                <i class="el-icon-video-camera-solid" v-if="file.file.raw.type.includes('video')"></i>
               </div>
               <span class="fileName ellipsis"> {{ file.file.name }} </span>
             </div>
@@ -109,6 +109,7 @@
 <script>
     import { uploadFile } from './utils/uploaderHelper'
     import { getToken,setToken } from './utils/token'
+    import { getTokenByMobileId } from './utils/sql'
     export default{
       data(){
         return{
@@ -144,7 +145,15 @@
           }
         }
       },
+      created(){
+        if(this.token){
+          this.getTOkenSSS()
+        }
+      },
       methods:{
+        async getTOkenSSS(){
+          const res = await getTokenByMobileId(this.token)
+        },
         handleChange(file){
           if(!this.filesJson[file.uid] && file.status === 'ready'){
             this.filesJson[file.uid] = 0
@@ -182,14 +191,17 @@
         async submitForm(ref){
           await this.$ref[ref].validate(async(valid) => {
             if (valid) {
-              setToken(this.keySetForm.key)
-              this.token = getToken() || ''
-              this.keySet = false
-              this.$message({
-                message:"Token设置成功",
-                type:'success',
-                duration:5000
-              })
+              const res = getTokenByMobileId(this.keySetForm.key)
+              if(res.status == 200 && res.data){
+                setToken(this.keySetForm.key)
+                this.token = getToken() || ''
+                this.keySet = false
+                this.$message({
+                  message:'设置Token成功',
+                  type:'success',
+                  duration:5000
+                })
+              }
             }
           })
         },
@@ -225,9 +237,12 @@
       align-items: center;
       .fileListItem{
         width: 100%;
+        height: 100%;
         justify-content: space-between;
+        padding: 2rem;
         .fileInfo{
           width: 100%;
+          height: 100%;
           align-items: center;
           .fileName{
             width: calc(100% - 4.5rem);
@@ -235,8 +250,10 @@
           }
           .fileImg{
             width: 4rem;
+            height: 100%;
             object-fit: cover;
             overflow: hidden;
+            font-size: 3rem;
             img{
               width: 100%;
               height: 100%;
@@ -261,6 +278,9 @@
 </style>
 <style lang="scss">
   .main{
+    .el-upload-list__item{
+      padding: unset !important;
+    }
     .fileImg{
       .el-icon{
         font-size: 3rem;
