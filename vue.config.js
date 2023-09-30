@@ -6,5 +6,12 @@ module.exports = defineConfig({
     host:'0.0.0.0',
     port:8080,
     open:true
+  },
+  css: {
+    loaderOptions: {
+      sass: {
+        additionalData : `@import "@/style.scss";`
+      }
+    }
   }
 })

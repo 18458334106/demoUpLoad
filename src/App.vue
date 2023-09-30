@@ -9,20 +9,21 @@
     <div class="main flexColumn">
       <div class="flexRowCenterAll"
         style="width: 100%;height: 10rem;margin: 1rem 0;justify-content: space-around;">
-        <div class="flexColumnCenterAll" @click="howToUseVis = true">
+        <div class="flexColumnCenterAll" @click="howToUseVis = true"
+        style="cursor: pointer;">
           <i class="el-icon-question" style="color:#409EFF;font-size: 3rem;"></i>
           <br>
           <span>点我查看使用方法</span>
         </div>
         <div class="flexColumnCenterAll" @click="()=>{
-          token ? '' : keySet = true;
-        }">
+          this.token ? '' : this.keySet = true;
+        }" style="cursor: pointer;">
           <i v-if="token" class="el-icon-check" style="color: #67C23A;font-size: 3rem;"></i>
           <i v-else class="el-icon-close" style="color: red;font-size: 3rem;"></i>
           <br>
           <span v-bind:style="{'color': token ? '#67C23A' : 'red'}">{{ token ? '已设置 Token' : '未设置 Token' }}</span>
         </div>
-        <div class="flexColumnCenterAll" @click="keySet = true">
+        <div class="flexColumnCenterAll" @click="keySet = true" style="cursor: pointer;">
           <i class="el-icon-setting" style="color:#409EFF;font-size: 3rem;"></i>
           <br>
           <span>点我设置你的token</span>
@@ -48,7 +49,7 @@
         list-type="picture"
       >
         <template #trigger>
-          <i class="el-icon--upload el-icon-plus"></i>
+          <i class="el-icon--upload el-icon-plus" style="font-size: 3rem;"></i>
           <div class="el-upload__text">
             拖拽至此或点击选择上传
           </div>
@@ -81,7 +82,7 @@
 
 
 
-    <el-drawer title="使用方法" v-model="howToUseVis" direction="btt">
+    <el-drawer title="使用方法" :visible.sync="howToUseVis" direction="btt">
       <p class="upP">1.找到手机设置中设备的序列号并且复制</p>
       <p class="upP">2.点击页面上的设置Token</p>
       <p class="upP">3.输入Token并提交</p>
@@ -89,7 +90,7 @@
       <p class="upP">作者联系方式：19857191790</p>
     </el-drawer>
 
-    <el-drawer title="设置Token" v-model="keySet" direction="btt">
+    <el-drawer title="设置Token" :visible.sync="keySet" direction="btt">
       <el-form :model="keySetForm" :rules="keySetRules" ref="keySetRef">
           <el-form-item prop="key">
             <el-input v-model="keySetForm.key" size="large" placeholder="请输入Token" />
@@ -142,9 +143,6 @@
             this.inputDis = false
           }
         }
-      },
-      created(){
-
       },
       methods:{
         handleChange(file){
@@ -257,7 +255,7 @@
       height: 4rem;
     }
     .el-drawer__body .upP{
-      font-size: 2rem;
+      font-size: 1rem;
     }
   }
 </style>
@@ -276,6 +274,11 @@
     }
     .el-upload-dragger{
       border-width: 2px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
     .el-input__wrapper{
       box-shadow: 0 0 0 2px var(--el-input-border-color,var(--el-border-color)) inset;
@@ -295,5 +298,8 @@
     .el-input__inner::placeholder {
       color: red;
     }
+  }
+  .el-drawer__body{
+    padding: 2rem;
   }
 </style>
