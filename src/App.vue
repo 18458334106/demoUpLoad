@@ -65,7 +65,7 @@
               </div>
               <br v-if="showPercent">
               <div class="filePercent" v-show="showPercent">
-                <el-progress v-show="filesJson[file.file.uid] < 100" :percentage="filesJson[file.file.uid]" />
+                <el-progress v-if="filesJson[file.file.uid] < 100" :percentage="filesJson[file.file.uid]" />
                 <div
                   v-if="filesJson[file.file.uid] === 100"
                   class="uploadSuccess flexRow">
@@ -166,8 +166,10 @@
           this.inputDis = true
           await uploadFile(e.file,this.fileBolder).subscribe({
             next: (result) => {
+              console.log(result,this.filesJson);
               let per = parseInt(result.total.percent.toFixed(0))
               this.filesJson[uid] = per
+              this.$forceUpdate()
             },
             error: (err) => {
               this.$message({
