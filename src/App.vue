@@ -19,7 +19,7 @@
             this.token ? '' : this.keySet = true;
           }" style="cursor: pointer;">
             <i v-if="token" class="el-icon-check" style="color: #67C23A;font-size: 3rem;"></i>
-            <i v-else class="el-icon-close" style="color: red;font-size: 3rem;"></i>
+            <i v-else class="el-icon-close" style="color: red;font-size: 2rem;"></i>
             <br>
             <span v-bind:style="{'color': token ? '#67C23A' : 'red'}">{{ token ? '已设置 Token' : '未设置 Token' }}</span>
           </div>
@@ -55,7 +55,7 @@
             </div>
           </template>
           <template #file="file">
-            <div class="fileListItem flexColumn">
+            <div class="fileListItem flexColumn"  v-if="isPageVis">
               <div class="fileInfo flexRow">
                 <div class="fileImg flexRowCenterAll">
                   <i class="el-icon-picture" v-if="file.file.raw.type.includes('image')"></i>
@@ -69,7 +69,7 @@
                 <div
                   v-if="filesJson[file.file.uid] === 100"
                   class="uploadSuccess flexRow">
-                  <i class="el-icon-check"></i>
+                  <i class="el-icon-check" style="color: #67C23A;font-size: 3rem;"></i>
                 </div>
               </div>
             </div>
@@ -134,7 +134,8 @@
                 trigger: 'blur'
               }
             ]
-          }
+          },
+          isPageVis:true
         }
       },
       watch:{
@@ -148,8 +149,22 @@
         if(this.token){
           this.getTOkenSSS()
         }
+        document.addEventListener("visibilitychange",this.handleVisibilityChange)
+      },
+      destroyed(){
+        document.removeEventListener("visibilitychange", this.handleVisibilityChange);
       },
       methods:{
+        handleVisibilityChange() {
+          console.log(document.visibilityState);
+          if (document.visibilityState === "visible") {
+            // 页面从后台切回前台
+            this.isPageVis = true;
+          } else {
+            // 页面切到后台
+            this.isPageVis = false;
+          }
+        },
         async getTOkenSSS(){
           const res = await getTokenByMobileId(this.token)
         },
@@ -239,7 +254,7 @@
       align-items: center;
       .fileListItem{
         width: 100%;
-        height: 100%;
+        min-height: 100%;
         justify-content: space-between;
         padding: 1rem;
         .fileInfo{
@@ -282,6 +297,7 @@
   .main{
     .el-upload-list__item{
       padding: unset !important;
+      height: auto !important;
     }
     .fileImg{
       .el-icon{

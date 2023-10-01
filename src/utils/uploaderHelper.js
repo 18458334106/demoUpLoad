@@ -2,13 +2,13 @@ import * as qiniu from 'qiniu-js';
 // @ts-ignore
 import * as CryptoJS from 'crypto-js'
 
-// export const ak = 'IAM-F5yqfl0mN9zferTQMsaZP_pf8tsnXbz4YVJWJMEM'
-// export const sk = 'gjnAWqegg3V37pitU-aRojQxdiwFfnFd5UrRwxCqOvyB'
-// export const bucketname = 'city-best-all'
+export const ak = 'IAM-F5yqfl0mN9zferTQMsaZP_pf8tsnXbz4YVJWJMEM'
+export const sk = 'gjnAWqegg3V37pitU-aRojQxdiwFfnFd5UrRwxCqOvyB'
+export const bucketname = 'city-best-all'
 
-export const ak = 'IAM-hoBasBUKO_CONvgWjf08D6GxugA4n5m_zKhRUrTY'
-export const sk = 'mM99LD045_VHVe9knrBDo1wYpUg6eCkuDXOJdsaSoQ7M'
-export const bucketname = 'develop-shan'
+// export const ak = 'IAM-hoBasBUKO_CONvgWjf08D6GxugA4n5m_zKhRUrTY'
+// export const sk = 'mM99LD045_VHVe9knrBDo1wYpUg6eCkuDXOJdsaSoQ7M'
+// export const bucketname = 'develop-shan'
 
 export function uploadFile(file,fileBolder) {
     const uptoken = getToken(ak,sk,bucketname);
