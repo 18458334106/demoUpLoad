@@ -6,80 +6,81 @@
         <span>善星球公益发展中心出品</span>
       </div>
     </div>
-    <div class="main flexColumn">
-      <div class="flexRowCenterAll"
-        style="width: 100%;height: 10rem;margin: 1rem 0;justify-content: space-around;">
-        <div class="flexColumnCenterAll" @click="howToUseVis = true"
-        style="cursor: pointer;">
-          <i class="el-icon-question" style="color:#409EFF;font-size: 3rem;"></i>
-          <br>
-          <span>点我查看使用方法</span>
+    <KeepAlive includes="mainNma" :max="10">
+      <div class="main flexColumn" name="mainNma">
+        <div class="flexRowCenterAll"
+          style="width: 100%;height: 10rem;margin: 1rem 0;justify-content: space-around;">
+          <div class="flexColumnCenterAll" @click="howToUseVis = true"
+          style="cursor: pointer;">
+            <i class="el-icon-question" style="color:#409EFF;font-size: 3rem;"></i>
+            <br>
+            <span>点我查看使用方法</span>
+          </div>
+          <div class="flexColumnCenterAll" @click="()=>{
+            this.token ? '' : this.keySet = true;
+          }" style="cursor: pointer;">
+            <i v-if="token" class="el-icon-check" style="color: #67C23A;font-size: 3rem;"></i>
+            <i v-else class="el-icon-close" style="color: red;font-size: 3rem;"></i>
+            <br>
+            <span v-bind:style="{'color': token ? '#67C23A' : 'red'}">{{ token ? '已设置 Token' : '未设置 Token' }}</span>
+          </div>
+          <div class="flexColumnCenterAll" @click="keySet = true" style="cursor: pointer;">
+            <i class="el-icon-setting" style="color:#409EFF;font-size: 3rem;"></i>
+            <br>
+            <span>点我设置你的token</span>
+          </div>
         </div>
-        <div class="flexColumnCenterAll" @click="()=>{
-          this.token ? '' : this.keySet = true;
-        }" style="cursor: pointer;">
-          <i v-if="token" class="el-icon-check" style="color: #67C23A;font-size: 3rem;"></i>
-          <i v-else class="el-icon-close" style="color: red;font-size: 3rem;"></i>
-          <br>
-          <span v-bind:style="{'color': token ? '#67C23A' : 'red'}">{{ token ? '已设置 Token' : '未设置 Token' }}</span>
-        </div>
-        <div class="flexColumnCenterAll" @click="keySet = true" style="cursor: pointer;">
-          <i class="el-icon-setting" style="color:#409EFF;font-size: 3rem;"></i>
-          <br>
-          <span>点我设置你的token</span>
-        </div>
+        <el-divider></el-divider>
+        <el-input
+          :disabled="inputDis"
+          v-model="fileBolder"
+          type="text"
+          style="width: 90vw;margin-bottom: 1rem;"
+          placeholder="如果需要存在某个文件夹下请输入文件夹的相对路径"
+          placeholder-style="color:red"></el-input>
+        <el-upload
+          ref="upload"
+          class="upload-demo flexColumnCenterAll"
+          drag
+          :action="action"
+          :auto-upload="false"
+          :on-change="handleChange"
+          :http-request="handleRequest"
+          :multiple="true"
+          list-type="picture"
+        >
+          <template #trigger>
+            <i class="el-icon--upload el-icon-plus" style="font-size: 3rem;"></i>
+            <div class="el-upload__text">
+              拖拽至此或点击选择上传
+            </div>
+          </template>
+          <template #file="file">
+            <div class="fileListItem flexColumn">
+              <div class="fileInfo flexRow">
+                <div class="fileImg flexRowCenterAll">
+                  <i class="el-icon-picture" v-if="file.file.raw.type.includes('image')"></i>
+                  <i class="el-icon-video-camera-solid" v-if="file.file.raw.type.includes('video')"></i>
+                </div>
+                <span class="fileName ellipsis"> {{ file.file.name }} </span>
+              </div>
+              <br v-if="showPercent">
+              <div class="filePercent" v-show="showPercent">
+                <el-progress v-show="filesJson[file.file.uid] < 100" :percentage="filesJson[file.file.uid]" />
+                <div
+                  v-if="filesJson[file.file.uid] === 100"
+                  class="uploadSuccess flexRow">
+                  <i class="el-icon-check"></i>
+                </div>
+              </div>
+            </div>
+          </template>
+          <el-button type="success" size="large" style="margin: 1rem 0;" @click="submitUpload">
+            点我提交上传
+          </el-button>
+        </el-upload>
       </div>
-      <el-divider></el-divider>
-      <el-input
-        :disabled="inputDis"
-        v-model="fileBolder"
-        type="text"
-        style="width: 90vw;margin-bottom: 1rem;"
-        placeholder="如果需要存在某个文件夹下请输入文件夹的相对路径"
-        placeholder-style="color:red"></el-input>
-      <el-upload
-        ref="upload"
-        class="upload-demo flexColumnCenterAll"
-        drag
-        :action="action"
-        :auto-upload="false"
-        :on-change="handleChange"
-        :http-request="handleRequest"
-        :multiple="true"
-        list-type="picture"
-      >
-        <template #trigger>
-          <i class="el-icon--upload el-icon-plus" style="font-size: 3rem;"></i>
-          <div class="el-upload__text">
-            拖拽至此或点击选择上传
-          </div>
-        </template>
-        <template #file="file">
-          <div class="fileListItem flexColumn">
-            <div class="fileInfo flexRow">
-              <div class="fileImg flexRowCenterAll">
-                <i class="el-icon-picture" v-if="file.file.raw.type.includes('image')"></i>
-                <i class="el-icon-video-camera-solid" v-if="file.file.raw.type.includes('video')"></i>
-              </div>
-              <span class="fileName ellipsis"> {{ file.file.name }} </span>
-            </div>
-            <br v-if="showPercent">
-            <div class="filePercent" v-show="showPercent">
-              <el-progress v-show="filesJson[file.file.uid] < 100" :percentage="filesJson[file.file.uid]" />
-              <div
-                v-if="filesJson[file.file.uid] === 100"
-                class="uploadSuccess flexRow">
-                <i class="el-icon-check"></i>
-              </div>
-            </div>
-          </div>
-        </template>
-        <el-button type="success" size="large" style="margin: 1rem 0;" @click="submitUpload">
-          点我提交上传
-        </el-button>
-      </el-upload>
-    </div>
-
+    </KeepAlive>
 
 
     <el-drawer title="使用方法" :visible.sync="howToUseVis" direction="btt">
@@ -149,6 +150,12 @@
         if(this.token){
           this.getTOkenSSS()
         }
+      },
+      activated(){
+        this.submitUpload()
+      },
+      deactivated(){
+        this.submitUpload()
       },
       methods:{
         async getTOkenSSS(){
