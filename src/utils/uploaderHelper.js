@@ -6,9 +6,9 @@ import * as CryptoJS from 'crypto-js'
 // export const sk = 'gjnAWqegg3V37pitU-aRojQxdiwFfnFd5UrRwxCqOvyB'
 // export const bucketname = 'city-best-all'
 
-export const ak = 'h1iZ7ssAbVt35FzE5U8J5aysGtIQqFMWx-c1paMp'
-export const sk = 'PbaelH10u98QMBxlgWa6o2bEsVcYk2u-XoCRi7Yn'
-export const bucketname = '19857191790'
+export const ak = 'IAM-hoBasBUKO_CONvgWjf08D6GxugA4n5m_zKhRUrTY'
+export const sk = 'mM99LD045_VHVe9knrBDo1wYpUg6eCkuDXOJdsaSoQ7M'
+export const bucketname = 'develop-shan'
 
 export function uploadFile(file,fileBolder) {
     const uptoken = getToken(ak,sk,bucketname);

@@ -6,8 +6,7 @@
         <span>善星球公益发展中心出品</span>
       </div>
     </div>
-    <KeepAlive includes="mainNma" :max="10">
-      <div class="main flexColumn" name="mainNma">
+    <div class="main flexColumn">
         <div class="flexRowCenterAll"
           style="width: 100%;height: 10rem;margin: 1rem 0;justify-content: space-around;">
           <div class="flexColumnCenterAll" @click="howToUseVis = true"
@@ -80,7 +79,6 @@
           </el-button>
         </el-upload>
       </div>
-    </KeepAlive>
 
 
     <el-drawer title="使用方法" :visible.sync="howToUseVis" direction="btt">
@@ -96,9 +94,9 @@
           <el-form-item prop="key">
             <el-input v-model="keySetForm.key" size="large" placeholder="请输入Token" />
           </el-form-item>
-          <el-form-item>
+          <el-form-item align="center">
             <el-button @click="keySet = false">取消</el-button>
-            <el-button type="primary" @click="submitForm('keySetRef')">
+            <el-button type="primary" @click="submitForm">
               确认
             </el-button>
           </el-form-item>
@@ -151,12 +149,6 @@
           this.getTOkenSSS()
         }
       },
-      activated(){
-        this.submitUpload()
-      },
-      deactivated(){
-        this.submitUpload()
-      },
       methods:{
         async getTOkenSSS(){
           const res = await getTokenByMobileId(this.token)
@@ -195,22 +187,23 @@
             }
           });
         },
-        async submitForm(ref){
-          await this.$ref[ref].validate(async(valid) => {
-            if (valid) {
-              const res = getTokenByMobileId(this.keySetForm.key)
-              if(res.status == 200 && res.data){
-                setToken(this.keySetForm.key)
-                this.token = getToken() || ''
-                this.keySet = false
-                this.$message({
-                  message:'设置Token成功',
-                  type:'success',
-                  duration:5000
-                })
-              }
+        async submitForm(){
+          if(this.keySetForm.key !== ''){
+            const res = await getTokenByMobileId(this.keySetForm.key)
+            console.log(res);
+            if(res.status == 200 && res.data.length !== 0){
+              setToken(this.keySetForm.key)
+              this.token = getToken() || ''
+              this.keySet = false
+              this.$message({
+                message:'设置Token成功',
+                type:'success',
+                duration:5000
+              })
+            }else{
+              this.$message.error(`设置Token失败,${res.error || ''}`)
             }
-          })
+          }
         },
         submitUpload(){
           if(!this.token){
@@ -246,7 +239,7 @@
         width: 100%;
         height: 100%;
         justify-content: space-between;
-        padding: 2rem;
+        padding: 1rem;
         .fileInfo{
           width: 100%;
           height: 100%;
